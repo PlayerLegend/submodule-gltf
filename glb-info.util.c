@@ -12,9 +12,9 @@
 #include "../window/def.h"
 #include "def.h"
 #include "../log/log.h"
-#include "../convert/def.h"
+#include "../convert/source.h"
 #include "convert.h"
-#include "../convert/fd.h"
+#include "../convert/fd/source.h"
 
 bool print_object_string (json_object * object, const char * key, const char * prefix)
 {
@@ -114,7 +114,7 @@ int main (int argc, char * argv[])
     glb_toc toc;
 
     int fd;
-    convert_interface_fd fd_read;
+    fd_source fd_source;
 
     gltf gltf;
 
@@ -137,14 +137,14 @@ int main (int argc, char * argv[])
 	    log_fatal ("Could not open input file %s", file_path);
 	}
 
-	fd_read = convert_interface_fd_init(fd);
+	fd_source = fd_source_init (fd, &buffer);
 
-	if (!gltf_load_from_interface(&gltf, &toc, &buffer, &fd_read.interface))
+	if (!gltf_load_from_source(&gltf, &toc, &fd_source.source))
 	{
 	    log_fatal ("Could not read input file %s", file_path);
 	}
 	
-	convert_clear (&fd_read.interface);
+	convert_source_clear (&fd_source.source);
         
 	log_normal ("generator: %s", gltf.asset.generator);
 	log_normal ("version: %s", gltf.asset.version);

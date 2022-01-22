@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <assert.h>
 #define FLAT_INCLUDES
 #include "../range/def.h"
 #include "../window/def.h"
@@ -11,8 +12,8 @@
 #include "../json/def.h"
 #include "def.h"
 #include "../log/log.h"
-#include "../convert/def.h"
-#include "../convert/fd.h"
+#include "../convert/source.h"
+#include "../convert/fd/source.h"
 #include "convert.h"
 
 int main (int argc, char * argv[])
@@ -25,16 +26,16 @@ int main (int argc, char * argv[])
 
     glb_toc toc;
     int fd = open (argv[1], O_RDONLY);
-    convert_interface_fd fd_read = convert_interface_fd_init(fd);
 
     window_unsigned_char buffer = {0};
+    fd_source fd_source = fd_source_init (fd, &buffer);
     
-    if (!glb_toc_load_from_interface(&toc, &buffer, &fd_read.interface))
+    if (!glb_toc_load_from_source(&toc, &fd_source.source))
     {
 	log_fatal ("Failed to load from interface");
     }
 
-    convert_clear(&fd_read.interface);
+    convert_source_clear(&fd_source.source);
     
     printf ("%.*s\n", toc.json->length, (const char*)toc.json->data);
 

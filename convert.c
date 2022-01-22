@@ -9,20 +9,23 @@
 #include "../json/def.h"
 #include "../window/def.h"
 #include "../window/alloc.h"
-#include "../convert/def.h"
+#include "../convert/source.h"
 #include "def.h"
+#include "convert.h"
 #include "parse.h"
 
-bool glb_toc_load_from_interface (glb_toc * toc, window_unsigned_char * buffer, convert_interface * interface)
+bool glb_toc_load_from_source (glb_toc * toc, convert_source * source)
 {
     bool error = false;
 
     size_t min_alloc_size = sizeof(*toc->header) + sizeof(*toc->json) + sizeof(*toc->bin);
     size_t need_size;
 
+    window_unsigned_char * buffer = source->contents;
+
     window_alloc (*buffer, min_alloc_size);
 
-    while (convert_fill (&error, buffer, interface))
+    while (convert_fill_alloc (&error, source))
     {
 	toc->header = (glb_header*) buffer->region.begin;
 	
@@ -54,9 +57,9 @@ bool glb_toc_load_from_interface (glb_toc * toc, window_unsigned_char * buffer, 
     return false;
 }
 
-bool gltf_load_from_interface (gltf * gltf, glb_toc * toc, window_unsigned_char * buffer, convert_interface * interface)
+bool gltf_load_from_source (gltf * gltf, glb_toc * toc, convert_source * source)
 {
-    if (!glb_toc_load_from_interface (toc, buffer, interface))
+    if (!glb_toc_load_from_source (toc, source))
     {
 	return false;
     }

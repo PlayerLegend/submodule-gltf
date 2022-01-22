@@ -11,8 +11,8 @@
 #include "../window/def.h"
 #include "def.h"
 #include "../log/log.h"
-#include "../convert/def.h"
-#include "../convert/fd.h"
+#include "../convert/source.h"
+#include "../convert/fd/source.h"
 #include "convert.h"
 
 int main (int argc, char * argv[])
@@ -31,17 +31,17 @@ int main (int argc, char * argv[])
 	perror (argv[1]);
 	log_fatal ("Could not open input file");
     }
-    
-    convert_interface_fd fd_read = convert_interface_fd_init(fd);
 
     window_unsigned_char buffer = {0};
 
-    if (!glb_toc_load_from_interface (&toc, &buffer, &fd_read.interface))
+    fd_source fd_source = fd_source_init (fd, &buffer);
+    
+    if (!glb_toc_load_from_source (&toc, &fd_source.source))
     {
     	log_fatal ("Failed to load from interface");
     }
 
-    convert_clear (&fd_read.interface);
+    convert_source_clear (&fd_source.source);
     
     log_normal ("glb version: %u", toc.header->version);
     log_normal ("file size: %u", toc.header->length);

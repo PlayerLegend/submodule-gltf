@@ -1,42 +1,50 @@
-test/glb-toc: src/gltf/glb-toc.test.o
-test/glb-toc: src/gltf/gltf.o
-test/glb-toc: src/log/log.o
-test/glb-toc: src/json/json.o
-test/glb-toc: src/convert/def.o
-test/glb-toc: src/convert/fd.o
-test/glb-toc: src/window/alloc.o
-test/glb-toc: src/gltf/convert.o
-test/glb-toc: src/table/table.o
+test/glb-toc: \
+	src/gltf/glb-toc.test.o \
+	src/log/log.o \
+	src/convert/fd/source.o \
+	src/convert/source.o \
+	src/window/alloc.o \
+	src/gltf/convert.o \
+	src/gltf/gltf.o \
+	src/json/json.o \
+	src/range/range_strdup_to_string.o \
+	src/table/table.o
 
-bin/glb-json: src/gltf/glb-json.util.o
-bin/glb-json: src/gltf/gltf.o
-bin/glb-json: src/log/log.o
-bin/glb-json: src/json/json.o
-bin/glb-json: src/convert/fd.o
-bin/glb-json: src/gltf/convert.o
-bin/glb-json: src/window/alloc.o
-bin/glb-json: src/table/table.o
-bin/glb-json: src/convert/def.o
+bin/glb-json: \
+	src/gltf/glb-json.util.o \
+	src/log/log.o \
+	src/convert/source.o \
+	src/convert/fd/source.o \
+	src/gltf/convert.o \
+	src/window/alloc.o \
+	src/gltf/gltf.o \
+	src/json/json.o \
+	src/range/range_strdup_to_string.o \
+	src/table/table.o
 
-bin/gltf-vertices: src/gltf/dump-vertices.util.o
-bin/gltf-vertices: src/gltf/gltf.o
-bin/gltf-vertices: src/log/log.o
-bin/gltf-vertices: src/json/json.o
-bin/gltf-vertices: src/convert/fd.o
-bin/gltf-vertices: src/gltf/convert.o
-bin/gltf-vertices: src/window/alloc.o
-bin/gltf-vertices: src/table/table.o
-bin/gltf-vertices: src/convert/def.o
+bin/gltf-vertices: \
+	src/gltf/dump-vertices.util.o \
+	src/log/log.o \
+	src/convert/source.o \
+	src/convert/fd/source.o \
+	src/gltf/convert.o \
+	src/window/alloc.o \
+	src/gltf/gltf.o \
+	src/json/json.o \
+	src/range/range_strdup_to_string.o \
+	src/table/table.o
 
-bin/glb-info: src/gltf/glb-info.util.o
-bin/glb-info: src/gltf/gltf.o
-bin/glb-info: src/log/log.o
-bin/glb-info: src/json/json.o
-bin/glb-info: src/convert/fd.o
-bin/glb-info: src/gltf/convert.o
-bin/glb-info: src/window/alloc.o
-bin/glb-info: src/table/table.o
-bin/glb-info: src/convert/def.o
+bin/glb-info: \
+	src/gltf/glb-info.util.o \
+	src/log/log.o \
+	src/json/json.o \
+	src/convert/source.o \
+	src/convert/fd/source.o \
+	src/window/alloc.o \
+	src/gltf/convert.o \
+	src/range/range_strdup_to_string.o \
+	src/table/table.o \
+	src/gltf/gltf.o
 
 C_PROGRAMS += test/glb-toc
 C_PROGRAMS += bin/glb-json

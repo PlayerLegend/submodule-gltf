@@ -13,8 +13,8 @@
 #include "../json/traverse.h"
 #include "def.h"
 #include "../log/log.h"
-#include "../convert/def.h"
-#include "../convert/fd.h"
+#include "../convert/source.h"
+#include "../convert/fd/source.h"
 #include "convert.h"
 
 int main (int argc, char * argv[])
@@ -27,17 +27,17 @@ int main (int argc, char * argv[])
 
     glb_toc toc;
     int fd = open (argv[1], O_RDONLY);
-    convert_interface_fd fd_read = convert_interface_fd_init(fd);
+    window_unsigned_char buffer = {0};    
+    fd_source fd_source = fd_source_init (fd, &buffer);
 
     gltf gltf;
-    window_unsigned_char buffer = {0};
     
-    if (!gltf_load_from_interface(&gltf, &toc, &buffer, &fd_read.interface))
+    if (!gltf_load_from_source(&gltf, &toc, &fd_source.source))
     {
-	log_fatal ("Failed to load from interface");
+	log_fatal ("Failed to load from source");
     }
 
-    convert_clear(&fd_read.interface);
+    convert_source_clear(&fd_source.source);
 
     gltf_mesh * mesh;
     gltf_mesh_primitive * mesh_primitive;
