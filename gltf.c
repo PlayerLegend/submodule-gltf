@@ -1,20 +1,14 @@
-#include <assert.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "def.h"
 #include <stdlib.h>
-#include <string.h>
-#define FLAT_INCLUDES
-#include "../log/log.h"
-#include "../range/def.h"
-#include "../window/def.h"
-//#include "../file/file.h"
-#include "../keyargs/keyargs.h"
+#include "../range/string.h"
+#include "../table/string.h"
 #include "../json/def.h"
 #include "../json/parse.h"
+#include "../keyargs/keyargs.h"
 #include "../json/traverse.h"
-#include "def.h"
+#include "../log/log.h"
+#include <assert.h>
+#include <string.h>
 
 // misc helpers
 
@@ -236,16 +230,16 @@ static bool _gltf_read_buffer (void * output, gltf * gltf, const json_object * j
     {
 	return false;
     }
-    
-    json_value * value = json_lookup (json_buffer, "uri");
 
-    if (!value || value->type == JSON_NULL)
+    json_pair * uri_pair = json_lookup_string (json_buffer, "uri");
+
+    if (!uri_pair || uri_pair->value.type == JSON_NULL)
     {
 	gltf_buffer->uri = NULL;
     }
-    else if (value->type == JSON_STRING)
+    else if (uri_pair->value.type == JSON_STRING)
     {
-	gltf_buffer->uri = strcpy (malloc (strlen (value->string) + 1), value->string);
+	gltf_buffer->uri = strcpy (malloc (strlen (uri_pair->value.string) + 1), uri_pair->value.string);
     }
     else 
     {
@@ -588,7 +582,7 @@ bool gltf_parse (gltf * gltf, const range_const_unsigned_char * memory)
 
     bool status = gltf_from_json(gltf, json_root);
 
-    json_free (json_root);
+    json_value_free(json_root);
 
     return status;
 }

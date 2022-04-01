@@ -1,21 +1,11 @@
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "../def.h"
+#include "../../log/log.h"
 #include <fcntl.h>
+#include "../../convert/status.h"
+#include "../../convert/source.h"
+#include "../../convert/fd/source.h"
+#include "../convert.h"
 #include <assert.h>
-#define FLAT_INCLUDES
-#include "../range/def.h"
-#include "../window/def.h"
-#include "../window/alloc.h"
-#include "../keyargs/keyargs.h"
-#include "../json/def.h"
-#include "../json/traverse.h"
-#include "def.h"
-#include "../log/log.h"
-#include "../convert/source.h"
-#include "../convert/fd/source.h"
-#include "convert.h"
 
 int main (int argc, char * argv[])
 {
@@ -25,14 +15,12 @@ int main (int argc, char * argv[])
 	return 1;
     }
 
-    glb_toc toc;
+    glb glb;
     int fd = open (argv[1], O_RDONLY);
     window_unsigned_char buffer = {0};    
     fd_source fd_source = fd_source_init (fd, &buffer);
 
-    gltf gltf;
-    
-    if (!gltf_load_from_source(&gltf, &toc, &fd_source.source))
+    if (!glb_load_from_source(&glb, &fd_source.source))
     {
 	log_fatal ("Failed to load from source");
     }
@@ -42,12 +30,12 @@ int main (int argc, char * argv[])
     gltf_mesh * mesh;
     gltf_mesh_primitive * mesh_primitive;
 
-    for_range (mesh, gltf.meshes)
+    for_range (mesh, glb.gltf.meshes)
     {
 	log_normal ("Mesh: %s", mesh->name);
 	for_range(mesh_primitive, mesh->primitives)
 	{
-	    log_normal ("\tPrimitive %d:", range_index(mesh,gltf.meshes));
+	    log_normal ("\tPrimitive %d:", range_index(mesh, glb.gltf.meshes));
 
 	    gltf_accessor * position_accessor = mesh_primitive->attributes.position;
 
@@ -57,8 +45,8 @@ int main (int argc, char * argv[])
 
 	    range_const_unsigned_char file_bin =
 	    {
-		.begin = toc.bin->data,
-		.end = file_bin.begin + toc.bin->length,
+		.begin = glb.toc.bin->data,
+		.end = file_bin.begin + glb.toc.bin->length,
 	    };
 	    
 	    range_const_unsigned_char buffer_bytes =

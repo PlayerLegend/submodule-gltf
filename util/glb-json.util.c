@@ -1,20 +1,8 @@
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include "../convert.h"
+#include "../../convert/fd/source.h"
+#include "../../log/log.h"
 #include <fcntl.h>
-#include <assert.h>
-#define FLAT_INCLUDES
-#include "../range/def.h"
-#include "../window/def.h"
-#include "../window/alloc.h"
-#include "../keyargs/keyargs.h"
-#include "../json/def.h"
-#include "def.h"
-#include "../log/log.h"
-#include "../convert/source.h"
-#include "../convert/fd/source.h"
-#include "convert.h"
+#include <stdio.h>
 
 int main (int argc, char * argv[])
 {

@@ -37,20 +37,13 @@ bool gltf_accessor_env_setup (gltf_accessor_env * env, const glb_toc * toc, gltf
 
     range_const_unsigned_char range_buffer_view = { .begin = range_buffer.begin + buffer_view->byte_offset, .end = range_buffer_view.begin + buffer_view->byte_length };
 
-    log_debug ("buffer_view byte stride: %d", buffer_view->byte_stride);
-    log_debug ("else %d * %d = %d", env->component_size, env->type, env->component_size * env->type);
     env->byte_stride = !buffer_view->byte_stride ? (env->component_size * env->type) : buffer_view->byte_stride;
-    
-
-    log_debug ("%d mod %d * %d (=%d) == %d", env->byte_stride, env->component_size, env->type, env->component_size * env->type, env->byte_stride % (env->component_size * env->type));
     
     assert (env->byte_stride % (env->component_size * env->type) == 0);
     assert (env->byte_stride >= env->component_size * env->type);
 
     env->range.accessor.begin = range_buffer_view.begin + env->accessor->byte_offset;
     env->range.accessor.end = env->range.accessor.begin + env->accessor->count * env->byte_stride;
-
-    log_debug ("%d vs %d", range_count(range_buffer_view), env->accessor->byte_offset + env->accessor->count * env->byte_stride);
     
     if (range_buffer_view.begin < range_buffer.begin || range_buffer.end < range_buffer_view.end)
     {
