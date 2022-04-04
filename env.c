@@ -138,6 +138,7 @@ fail:
 	gltf_index * index;						\
 									\
 	fvec3 pass;							\
+	assert (range_count(env->range.accessor) % sizeof(*component.member) == 0); \
 									\
 	for_range (index, *indices)					\
 	{								\
@@ -179,14 +180,15 @@ static bool gltf_accessor_env_load_fvec3_from_float (void * target, bool (*loade
     gltf_index * index;
 
     fvec3 pass;
-
+    
     for_range (index, *indices)
     {
 	component.pointer = env->range.accessor.begin + env->byte_stride * (*index);
 
+	assert (range_count(env->range.accessor) % env->byte_stride == 0);
 	if ( (void*)(component.f + 3) > (void*)env->range.accessor.end)
 	{
-	    log_fatal ("Index to vertex attributes is out of bounds");
+	    log_fatal ("Index to vertex attributes is out of bounds %zu/%zu", *index, range_count(env->range.accessor) / env->byte_stride);
 	}
 
 	pass = (fvec3)

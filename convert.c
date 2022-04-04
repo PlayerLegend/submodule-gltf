@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "../window/alloc.h"
 #include "../log/log.h"
+#include "../convert/fd/source.h"
+#include <fcntl.h>
 
 bool glb_toc_load_from_source (glb_toc * toc, convert_source * source)
 {

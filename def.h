@@ -200,3 +200,5 @@ typedef struct {
     glb;
 
 range_typedef(glb,glb);
+
+void glb_toc_copy_mem(glb_toc * target);
