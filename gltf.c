@@ -578,7 +578,7 @@ fail:
 
 bool gltf_parse (gltf * gltf, const range_const_unsigned_char * memory)
 {
-    json_value * json_root = json_parse(&memory->char_cast.const_cast);
+    json_value * json_root = json_parse(&memory->char_cast.alias_const);
 
     bool status = gltf_from_json(gltf, json_root);
 

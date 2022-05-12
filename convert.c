@@ -20,13 +20,13 @@ bool glb_toc_load_from_source (glb_toc * toc, convert_source * source)
     while ((status = convert_fill_alloc (source)) != STATUS_ERROR)
     {
 	toc->header = (glb_header*) buffer->region.begin;
-	
+
 	assert ((size_t)range_count (buffer->region) >= min_alloc_size);
 	toc->json = (glb_chunk_header*) (buffer->region.begin + sizeof(*toc->header));
 	assert ((unsigned char*) (toc->json + 1) < buffer->region.end);
 
 	toc->bin = (glb_chunk_header*) ((unsigned char*)(toc->json + 1) + toc->json->length);
-
+	
 	if ((unsigned char*)(toc->bin + 1) > buffer->region.end)
 	{
 	    if (status == STATUS_UPDATE)
