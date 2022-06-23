@@ -1,16 +1,16 @@
 #include <stdlib.h>
-#include "../def.h"
+#include "../type.h"
 #include "../../keyargs/keyargs.h"
 #include "../../table/string.h"
 #include "../../json/def.h"
 #include "../../json/traverse.h"
 #include "../../log/log.h"
-#include "../../convert/status.h"
+#include "../../convert/type.h"
 #include "../../convert/source.h"
 #include "../../convert/fd/source.h"
 #include <fcntl.h>
 #include <stdio.h>
-#include "../convert.h"
+#include "../load/source.h"
 
 bool print_object_string (json_object * object, const char * key, const char * prefix)
 {
@@ -132,7 +132,7 @@ int main (int argc, char * argv[])
 
 	fd_source = fd_source_init (fd, &buffer);
 
-	if (!glb_load_from_source(&glb, &fd_source.source))
+	if (!glb_load_source(&glb, &fd_source.source))
 	{
 	    log_fatal ("Could not read input file %s", file_path);
 	}

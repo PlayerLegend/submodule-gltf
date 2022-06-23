@@ -8,7 +8,7 @@
 #include "../window/alloc.h"
 #include "../vec/vec.h"
 #include "../vec/vec3.h"
-#include "def.h"
+#include "type.h"
 #include "env.h"
 #include "../log/log.h"
 

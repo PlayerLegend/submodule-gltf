@@ -190,15 +190,14 @@ typedef struct {
 range_typedef(gltf_index, gltf_index);
 window_typedef(gltf_index, gltf_index);
 
-#define for_gltf_accessor(component, accessor_env)	\
-    for ((component).pointer = (accessor_env).range.accessor.begin; (component).pointer < (accessor_env).range.accessor.end; (component).pointer += (accessor_env).byte_stride)
-
 typedef struct {
     glb_toc toc;
     gltf gltf;
+    void * toc_mem;
 }
     glb;
 
 range_typedef(glb,glb);
 
-void glb_toc_copy_mem(glb_toc * target);
+#define for_gltf_accessor(component, accessor_env)	\
+    for ((component).pointer = (accessor_env).range.accessor.begin; (component).pointer < (accessor_env).range.accessor.end; (component).pointer += (accessor_env).byte_stride)

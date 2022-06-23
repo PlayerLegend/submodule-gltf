@@ -1,10 +1,10 @@
-#include "../def.h"
+#include "../type.h"
 #include "../../log/log.h"
 #include <fcntl.h>
-#include "../../convert/status.h"
+#include "../../convert/type.h"
 #include "../../convert/source.h"
 #include "../../convert/fd/source.h"
-#include "../convert.h"
+#include "../load/source.h"
 #include <assert.h>
 
 int main (int argc, char * argv[])
@@ -20,7 +20,7 @@ int main (int argc, char * argv[])
     window_unsigned_char buffer = {0};    
     fd_source fd_source = fd_source_init (fd, &buffer);
 
-    if (!glb_load_from_source(&glb, &fd_source.source))
+    if (!glb_load_source(&glb, &fd_source.source))
     {
 	log_fatal ("Failed to load from source");
     }

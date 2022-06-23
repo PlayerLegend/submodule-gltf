@@ -1,12 +1,12 @@
-#include "def.h"
+#include "../type.h"
 #include <stdlib.h>
-#include "../range/string.h"
-#include "../table/string.h"
-#include "../json/def.h"
-#include "../json/parse.h"
-#include "../keyargs/keyargs.h"
-#include "../json/traverse.h"
-#include "../log/log.h"
+#include "../../range/string.h"
+#include "../../table/string.h"
+#include "../../json/def.h"
+#include "../../json/parse.h"
+#include "../../keyargs/keyargs.h"
+#include "../../json/traverse.h"
+#include "../../log/log.h"
 #include <assert.h>
 #include <string.h>
 
@@ -576,7 +576,7 @@ fail:
     return false;
 }
 
-bool gltf_parse (gltf * gltf, const range_const_unsigned_char * memory)
+bool gltf_load_memory (gltf * gltf, const range_const_unsigned_char * memory)
 {
     json_value * json_root = json_parse(&memory->char_cast.alias_const);
 
@@ -587,74 +587,19 @@ bool gltf_parse (gltf * gltf, const range_const_unsigned_char * memory)
     return status;
 }
 
-static void gltf_asset_clear (gltf_asset * target)
+bool glb_load_memory (glb * result, const range_const_unsigned_char * memory)
 {
-    free (target->generator);
-    free (target->version);
-}
-
-static void gltf_buffer_clear (gltf_buffer * target)
-{
-    free (target->uri);
-}
-
-static void gltf_material_clear (gltf_material * target)
-{
-    free (target->name);
-}
-
-static void gltf_mesh_primitive_clear (gltf_mesh_primitive * target)
-{
-    free (target->attributes.texcoord.begin);
-    free (target->attributes.color.begin);
-    free (target->attributes.joints.begin);
-    free (target->attributes.weights.begin);
-
-    free (target->targets.begin);
-}
-
-static void gltf_mesh_clear (gltf_mesh * target)
-{
-    free (target->name);
-    gltf_mesh_primitive * target_primitive;
-
-    for_range (target_primitive, target->primitives)
+    if (!glb_toc_load_memory (&result->toc, memory))
     {
-	gltf_mesh_primitive_clear(target_primitive);
+	return false;
     }
 
-    free (target->primitives.begin);
-}
+    range_const_unsigned_char json_memory = { .begin = result->toc.json->data, result->toc.json->data + result->toc.json->length };
 
-void gltf_clear (gltf * gltf)
-{
-    gltf_asset_clear (&gltf->asset);
+    if (!gltf_load_memory(&result->gltf, &json_memory))
+    {
+	return false;
+    }
 
-#define gltf_clear_array(type, name)		\
-    { type * i; for_range (i, gltf->name) type##_clear(i); free (gltf->name.begin); }
-
-    gltf_clear_array (gltf_buffer, buffers);
-    free (gltf->buffer_views.begin);
-    free (gltf->accessors.begin);
-    gltf_clear_array (gltf_material, materials);
-    gltf_clear_array (gltf_mesh, meshes);
-}
-
-void glb_toc_copy_mem(glb_toc * target)
-{
-    size_t size = target->bin->length + (target->bin->data - (const unsigned char*)target->header);
-
-    void * contents_copy = calloc(1, size);
-
-    memcpy (contents_copy, target->header, size);
-
-    log_debug("toc size %zu", size);
-
-    glb_toc toc_copy = {
-	.header = contents_copy,
-	.json = (void*)( (char*)contents_copy + ((char*)target->json - (char*)target->header) ),
-	.bin = (void*)( (char*)contents_copy + ((char*)target->bin - (char*)target->header) ),
-    };
-
-    *target = toc_copy;
+    return true;
 }

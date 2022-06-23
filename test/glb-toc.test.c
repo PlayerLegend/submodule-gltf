@@ -1,10 +1,10 @@
-#include "../def.h"
+#include "../type.h"
 #include "../../log/log.h"
 #include <fcntl.h>
-#include "../../convert/status.h"
+#include "../../convert/type.h"
 #include "../../convert/source.h"
 #include "../../convert/fd/source.h"
-#include "../convert.h"
+#include "../load/source.h"
 #include <stdio.h>
 
 int main (int argc, char * argv[])
@@ -28,7 +28,7 @@ int main (int argc, char * argv[])
 
     fd_source fd_source = fd_source_init (fd, &buffer);
     
-    if (!glb_toc_load_from_source (&toc, &fd_source.source))
+    if (!glb_toc_load_source (&toc, &fd_source.source))
     {
     	log_fatal ("Failed to load from interface");
     }

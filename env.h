@@ -7,7 +7,7 @@
 #include "../window/def.h"
 #include "../vec/vec.h"
 #include "../vec/vec3.h"
-#include "def.h"
+#include "type.h"
 #endif
 
 bool gltf_accessor_env_setup (gltf_accessor_env * env, const glb_toc * toc, gltf_accessor * import_accessor);
